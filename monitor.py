@@ -83,4 +83,17 @@ def print_system_info(cpu_data, mem_data, disk_data, net_data):
     print(f"- Использовано: {mem_data['used_gb']} GB")
     print(f"- Использование: {mem_data['percent_used']}%\n")
 
+    print(f"Диск ({disk_data['path']}):")
+    print(f"- Всего: {disk_data['total_gb']} GB")
+    print(f"- Свободно: {disk_data['free_gb']} GB")
+    print(f"- Занято: {disk_data['used_gb']} GB")
+    print(f"- Использование: {disk_data['percent_used']}%\n")
+
+    print("Сеть:")
+    sent_gb = round(net_data["bytes_sent"] / (1024 ** 3), 2)
+    recv_gb = round(net_data["bytes_recv"] / (1024 ** 3), 2)
+    print(f"- Получено: {recv_gb} GB")
+    print(f"- Отправлено: {sent_gb} GB\n")
+
+
     
