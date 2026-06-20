@@ -43,3 +43,16 @@ def get_memory_info():
         "percent_used": round(mem.percent, 1),
     }
 
+def get_disk_info(path=None):
+    """Собирает информацию об использовании диска."""
+    if path is None:
+        path = "C:" if os.name == "nt" else "/"
+    disk = psutil.disk_usage(path)
+    return {
+        "path": path,
+        "total_gb": bytes_to_gb(disk.total),
+        "free_gb": bytes_to_gb(disk.free),
+        "used_gb": bytes_to_gb(disk.used),
+        "percent_used": round(disk.percent, 1),
+    }
+
