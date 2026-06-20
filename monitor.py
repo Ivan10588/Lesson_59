@@ -1,6 +1,7 @@
 import psutil
 import time
 import os
+import argparse
 from datetime import datetime
 
 def bytes_to_gb(bytes_value):
@@ -65,6 +66,7 @@ def get_network_info():
     }
 
 def print_system_info(cpu_data, mem_data, disk_data, net_data):
+    os.system('cls' if os.name == 'nt' else 'clear')
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     print("--- Мониторинг Ресурсов ---")
@@ -95,19 +97,48 @@ def print_system_info(cpu_data, mem_data, disk_data, net_data):
     print(f"- Получено: {recv_gb} GB")
     print(f"- Отправлено: {sent_gb} GB\n")
 
+    print(f"- Скорость приёма: {net_data['recv_mbps']} MB/s")
+    print(f"- Скорость отправки: {net_data['sent_mbps']} MB/s\n")
+
 def main():
+    parser = argparse.ArgumentParser(description="Мониторинг ресурсов системы")
+    parser.add_argument("--disk", type=str, default=None,
+                        help="Путь к диску для мониторинга (например, C:, /, /home). По умолчанию выбирается главный диск.")
+    args = parser.parse_args()
     update_interval = 2
 
     _ = get_cpu_info(use_interval_none=False)
 
+    prev_net = psutil.net_io_counters()
+    prev_time = time.time()
+
     try:
         while True:
+            now_time = time.time()
+            elapsed = now_time - prev_time
+
             cpu_data = get_cpu_info(use_interval_none=True)
             mem_data = get_memory_info()
             disk_data = get_disk_info()
-            net_data = get_network_info()
+
+            curr_net = psutil.net_io_counters()
+            bytes_sent_delta = curr_net.bytes_sent - prev_net.bytes_sent
+            bytes_recv_delta = curr_net.bytes_recv - prev_net.bytes_recv
+
+            sent_mbps = round(bytes_sent_delta / (1024 * 1024 * elapsed), 2) if elapsed > 0 else 0.0
+            recv_mbps = round(bytes_recv_delta / (1024 * 1024 * elapsed), 2) if elapsed > 0 else 0.0
+
+            net_data = {
+                "bytes_sent": curr_net.bytes_sent,
+                "bytes_recv": curr_net.bytes_recv,
+                "sent_mbps": sent_mbps,
+                "recv_mbps": recv_mbps,
+            }
 
             print_system_info(cpu_data, mem_data, disk_data, net_data)
+
+            prev_net = curr_net
+            prev_time = now_time
 
             time.sleep(update_interval)
 
