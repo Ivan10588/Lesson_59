@@ -56,3 +56,11 @@ def get_disk_info(path=None):
         "percent_used": round(disk.percent, 1),
     }
 
+def get_network_info():
+    """Собирает информацию об использовании сети (накопленные байты)."""
+    net = psutil.net_io_counters()
+    return {
+        "bytes_sent": net.bytes_sent,
+        "bytes_recv": net.bytes_recv,
+    }
+
