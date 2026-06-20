@@ -95,5 +95,8 @@ def print_system_info(cpu_data, mem_data, disk_data, net_data):
     print(f"- Получено: {recv_gb} GB")
     print(f"- Отправлено: {sent_gb} GB\n")
 
+def main():
+    update_interval = 2
 
-    
+    _ = get_cpu_info(use_interval_none=False)
+
