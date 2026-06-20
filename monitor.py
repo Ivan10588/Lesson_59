@@ -64,3 +64,23 @@ def get_network_info():
         "bytes_recv": net.bytes_recv,
     }
 
+def print_system_info(cpu_data, mem_data, disk_data, net_data):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    print("--- Мониторинг Ресурсов ---")
+    print(f"Время: {timestamp}\n")
+
+    print("CPU:")
+    if cpu_data["avg1"] != "N/A":
+        print(f"- Загрузка (1/5/15 мин): {cpu_data['avg1']}%, {cpu_data['avg5']}%, {cpu_data['avg15']}%")
+    else:
+        print("- Загрузка (1/5/15 мин): N/A (не поддерживается на этой ОС)")
+    print(f"- Текущая загрузка: {cpu_data['current_percent']}%\n")
+
+    print("Память (RAM):")
+    print(f"- Всего: {mem_data['total_gb']} GB")
+    print(f"- Доступно: {mem_data['available_gb']} GB")
+    print(f"- Использовано: {mem_data['used_gb']} GB")
+    print(f"- Использование: {mem_data['percent_used']}%\n")
+
+    
