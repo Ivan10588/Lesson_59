@@ -100,3 +100,20 @@ def main():
 
     _ = get_cpu_info(use_interval_none=False)
 
+    try:
+        while True:
+            cpu_data = get_cpu_info(use_interval_none=True)
+            mem_data = get_memory_info()
+            disk_data = get_disk_info()
+            net_data = get_network_info()
+
+            print_system_info(cpu_data, mem_data, disk_data, net_data)
+
+            time.sleep(update_interval)
+
+    except KeyboardInterrupt:
+        print("\nПрограмма завершена пользователем.")
+
+
+if __name__ == "__main__":
+    main()
